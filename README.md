@@ -14,7 +14,7 @@
 
 - Frontend: React.js
 - Backend: Node.js, Express
-- База даних: MongoDB
+- База даних: PostgreSQL
 - Автентифікація: JWT
 - Стилізація: CSS
 
@@ -40,15 +40,23 @@ npm install
 ```
 DB_USER=your_db_user
 DB_PASSWORD=your_db_password
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=course_work_db
 JWT_SECRET=your_jwt_secret
 ```
 
-5. Запустіть сервер:
+5. Створіть базу даних PostgreSQL та імпортуйте структуру:
+```bash
+psql -U your_db_user -d course_work_db -f database.sql
+```
+
+6. Запустіть сервер:
 ```bash
 npm start
 ```
 
-6. В окремому терміналі запустіть клієнтську частину:
+7. В окремому терміналі запустіть клієнтську частину:
 ```bash
 cd client
 npm start
