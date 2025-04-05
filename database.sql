@@ -1,5 +1,5 @@
 -- Створення бази даних
-CREATE DATABASE tracker;
+CREATE DATABASE IF NOT EXISTS tracker;
 
 -- Підключення до бази даних
 \c tracker;
@@ -8,7 +8,7 @@ CREATE DATABASE tracker;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Створення таблиці користувачів
-CREATE TABLE users(
+CREATE TABLE IF NOT EXISTS users(
     user_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_name VARCHAR(255) NOT NULL,
     user_email VARCHAR(255) NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE users(
 );
 
 -- Створення таблиці курсів
-CREATE TABLE courses(
+CREATE TABLE IF NOT EXISTS courses(
     course_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     course_name VARCHAR(255) NOT NULL,
     course_description TEXT,
@@ -26,7 +26,7 @@ CREATE TABLE courses(
 );
 
 -- Створення таблиці курсових робіт
-CREATE TABLE course_works(
+CREATE TABLE IF NOT EXISTS course_works(
     work_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     student_id uuid REFERENCES users(user_id),
     course_id uuid REFERENCES courses(course_id),
@@ -40,7 +40,7 @@ CREATE TABLE course_works(
 );
 
 -- Створення таблиці файлів
-CREATE TABLE work_files(
+CREATE TABLE IF NOT EXISTS work_files(
     file_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     work_id uuid REFERENCES course_works(work_id),
     file_name VARCHAR(255) NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE work_files(
 );
 
 -- Створення таблиці коментарів
-CREATE TABLE comments(
+CREATE TABLE IF NOT EXISTS comments(
     comment_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     work_id uuid REFERENCES course_works(work_id),
     user_id uuid REFERENCES users(user_id),
@@ -59,7 +59,7 @@ CREATE TABLE comments(
 );
 
 -- Створення таблиці оцінок
-CREATE TABLE grades(
+CREATE TABLE IF NOT EXISTS grades(
     grade_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     work_id uuid REFERENCES course_works(work_id),
     teacher_id uuid REFERENCES users(user_id),
@@ -69,14 +69,9 @@ CREATE TABLE grades(
 );
 
 -- Створення індексів для оптимізації запитів
-CREATE INDEX idx_course_works_student ON course_works(student_id);
-CREATE INDEX idx_course_works_course ON course_works(course_id);
-CREATE INDEX idx_work_files_work ON work_files(work_id);
-CREATE INDEX idx_comments_work ON comments(work_id);
-CREATE INDEX idx_grades_work ON grades(work_id);
+CREATE INDEX IF NOT EXISTS idx_course_works_student ON course_works(student_id);
+CREATE INDEX IF NOT EXISTS idx_course_works_course ON course_works(course_id);
+CREATE INDEX IF NOT EXISTS idx_work_files_work ON work_files(work_id);
+CREATE INDEX IF NOT EXISTS idx_comments_work ON comments(work_id);
+CREATE INDEX IF NOT EXISTS idx_grades_work ON grades(work_id);
 
--- Додавання тестових даних
-INSERT INTO users (user_name, user_email, user_password, role) 
-VALUES 
-('nazar', 'nazar@gmail.com', 'userpass', 'student'),
-('teacher', 'teacher@gmail.com', 'teacherpass', 'teacher');
